@@ -20,3 +20,6 @@ param automationAccountName = '${abbr}-aa'
 param storageAccountName = 'platprodweuarisa'
 param runbookName = '${abbr}-rb'
 param scheduleName = '${abbr}-sch'
+param vnetName = '${abbr}-vnet'
+param snetName = '${abbr}-snet'
+
