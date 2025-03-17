@@ -18,6 +18,9 @@ param storageAccountName string
 param runbookName string = '${abbr}-rb'
 param scheduleName string = '${abbr}-sch'
 
+param vnetName string = '${abbr}-vnet'
+param snetName string = '${abbr}-snet'
+
 module resourceGroupModule '../modules/resource-group/resourceGroup.bicep' = {
   name: 'resourceGroupModule'
   scope: subscription(subscriptionID)
@@ -65,5 +68,15 @@ module storageAccountModule '../modules/storage-account/storageAccount.bicep' = 
     automationAccountPrincipalId: automationAccountModule.outputs.automationAccountPrincipalId
     locations: locations
     storageBlobDataContributorID: storageBlobDataContributorID
+  }
+}
+
+module virtualNetworkModule '../modules/virtual-network/virtualNetwork.bicep' = {
+  name: 'virtualNetworkModule'
+  scope: resourceGroup(subscriptionID, resourceGroupName)
+  params: {
+    vnetName: vnetName
+    snetName: snetName
+    locations: locations
   }
 }

@@ -18,10 +18,23 @@ resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
     allowBlobPublicAccess: true
     networkAcls: {
       bypass: 'AzureServices'
-      defaultAction: 'Allow'
-      ipRules: []
-      virtualNetworkRules: []
+      defaultAction: 'Deny'
+      ipRules: [
+        {
+          action: 'Allow'
+          value: '213.249.139.162'
+        }
+      ]
+      virtualNetworkRules: [
+        {
+          action: 'Allow'
+          id: resourceId('Microsoft.Network/virtualNetworks/subnets', 'plat-prod-weu-ari-vnet', 'plat-prod-weu-ari-snet')
+          state: 'Succeeded'
+        }
+      ]
     }
+    publicNetworkAccess: 'Enabled'
+    supportsHttpsTrafficOnly: true
   }
 }
 
@@ -48,6 +61,34 @@ resource blobContainer 'Microsoft.Storage/storageAccounts/blobServices/container
   name: 'reports'
   properties: {
     publicAccess: 'Blob'
+  }
+}
+
+resource managementPolicy 'Microsoft.Storage/storageAccounts/managementPolicies@2024-01-01' = {
+  name: 'default'
+  parent: storageAccount
+  properties: {
+    policy: {
+      rules: [
+        {
+          enabled: true
+          name: 'Delete After 3 Months'
+          type: 'Lifecycle'
+          definition: {
+            actions: {
+              baseBlob: {
+                delete: {
+                  daysAfterCreationGreaterThan: '90'
+                }
+              }
+            }
+            filters: {
+              blobTypes: ['blockBlob']
+            }
+          }
+        }
+      ]
+    }
   }
 }
 
