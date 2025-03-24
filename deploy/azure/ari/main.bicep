@@ -21,12 +21,17 @@ param scheduleName string = '${abbr}-sch'
 param vnetName string = '${abbr}-vnet'
 param snetName string = '${abbr}-snet'
 
+param tags object = {
+  createdby: 'bicep'
+}
+
 module resourceGroupModule '../modules/resource-group/resourceGroup.bicep' = {
   name: 'resourceGroupModule'
   scope: subscription(subscriptionID)
   params: {
     resourceGroupName: resourceGroupName
     locations: locations
+    tags: tags
   }
 }
 
@@ -38,6 +43,7 @@ module automationAccountModule '../modules/automation-account/automationAccount.
       automationAccountName: automationAccountName
       runbookName: runbookName
       scheduleName: scheduleName
+      tags: tags
   }
 }
 
@@ -68,6 +74,7 @@ module storageAccountModule '../modules/storage-account/storageAccount.bicep' = 
     automationAccountPrincipalId: automationAccountModule.outputs.automationAccountPrincipalId
     locations: locations
     storageBlobDataContributorID: storageBlobDataContributorID
+    tags: tags
   }
 }
 
@@ -78,5 +85,6 @@ module virtualNetworkModule '../modules/virtual-network/virtualNetwork.bicep' = 
     vnetName: vnetName
     snetName: snetName
     locations: locations
+    tags: tags
   }
 }

@@ -23,3 +23,6 @@ param scheduleName = '${abbr}-sch'
 param vnetName = '${abbr}-vnet'
 param snetName = '${abbr}-snet'
 
+param tags = {
+  createdby: 'bicep'
+}

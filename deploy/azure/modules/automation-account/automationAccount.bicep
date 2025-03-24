@@ -4,10 +4,13 @@ param locations string
 param runbookName string
 param scheduleName string
 
+param tags object
+
 @description('Creates an Automation Account')
 resource automationAccount 'Microsoft.Automation/automationAccounts@2023-11-01' = {
   name: automationAccountName
   location: locations
+  tags: tags
   identity: {
     type: 'SystemAssigned'
   }
@@ -22,6 +25,7 @@ resource automationAccount 'Microsoft.Automation/automationAccounts@2023-11-01' 
 resource runbook 'Microsoft.Automation/automationAccounts/runbooks@2023-11-01' = {
   name: runbookName
   location: locations
+  tags: tags
   parent: automationAccount
   properties: {
     runbookType: 'PowerShell'

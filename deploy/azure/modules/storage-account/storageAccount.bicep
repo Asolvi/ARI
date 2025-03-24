@@ -5,10 +5,13 @@ param automationAccountPrincipalId string
 param locations string
 param storageBlobDataContributorID string
 
+param tags object
+
 @description('Creates a Storage Account')
 resource storageAccount 'Microsoft.Storage/storageAccounts@2023-05-01' = {
   name: storageAccountName
   location: locations
+  tags: tags
   kind: 'StorageV2'
   sku: {
     name: 'Standard_LRS'
