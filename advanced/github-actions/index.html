@@ -870,11 +870,38 @@
     Setting Up Azure Authentication
   </a>
   
+    <nav class="md-nav" aria-label="Setting Up Azure Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-service-principal" class="md-nav__link">
+    Using service principal
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-user-assigned-identity" class="md-nav__link">
+    Using user-assigned identity
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#github-action-workflow-template" class="md-nav__link">
-    GitHub Action Workflow Template
+  <a href="#github-action-workflow-template-for-service-principal" class="md-nav__link">
+    GitHub Action Workflow Template For Service Principal
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-action-workflow-template-for-user-assigned-identity" class="md-nav__link">
+    GitHub Action Workflow Template For User-Assigned Identity
   </a>
   
 </li>
@@ -1318,11 +1345,38 @@
     Setting Up Azure Authentication
   </a>
   
+    <nav class="md-nav" aria-label="Setting Up Azure Authentication">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#using-service-principal" class="md-nav__link">
+    Using service principal
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-user-assigned-identity" class="md-nav__link">
+    Using user-assigned identity
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
 </li>
       
         <li class="md-nav__item">
-  <a href="#github-action-workflow-template" class="md-nav__link">
-    GitHub Action Workflow Template
+  <a href="#github-action-workflow-template-for-service-principal" class="md-nav__link">
+    GitHub Action Workflow Template For Service Principal
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#github-action-workflow-template-for-user-assigned-identity" class="md-nav__link">
+    GitHub Action Workflow Template For User-Assigned Identity
   </a>
   
 </li>
@@ -1481,10 +1535,11 @@
 <p>To use this approach, you'll need:</p>
 <ol>
 <li>A GitHub repository</li>
-<li>An Azure service principal with appropriate permissions</li>
+<li>An Azure service principal or user-assigned identity with appropriate permissions</li>
 <li>GitHub Secrets to store your Azure credentials securely</li>
 </ol>
 <h2 id="setting-up-azure-authentication">Setting Up Azure Authentication</h2>
+<h3 id="using-service-principal">Using service principal</h3>
 <ol>
 <li>Create a service principal in Azure:</li>
 </ol>
@@ -1493,7 +1548,7 @@
 <ol>
 <li>Save the JSON output from this command. It will look similar to:</li>
 </ol>
-<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<p><div class="highlight"><pre><span></span><code><span class="p">{</span>
 <span class="w">  </span><span class="nt">&quot;clientId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;YOUR_CLIENT_ID&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;clientSecret&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;YOUR_CLIENT_SECRET&quot;</span><span class="p">,</span>
 <span class="w">  </span><span class="nt">&quot;subscriptionId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;YOUR_SUBSCRIPTION_ID&quot;</span><span class="p">,</span>
@@ -1506,16 +1561,91 @@
 <span class="w">  </span><span class="nt">&quot;managementEndpointUrl&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;https://management.core.windows.net/&quot;</span>
 <span class="p">}</span>
 </code></pre></div>
+3. In your GitHub repository, go to Settings → Secrets and variables → Actions</p>
 <ol>
-<li>In your GitHub repository, go to Settings → Secrets and variables → Actions</li>
 <li>Create these repository secrets:</li>
-<li><code>AZURE_CREDENTIALS</code>: The entire JSON output from step 1</li>
 <li><code>AZURE_CLIENT_ID</code>: The client ID from the JSON</li>
 <li><code>AZURE_CLIENT_SECRET</code>: The client secret from the JSON</li>
 <li><code>AZURE_TENANT_ID</code>: The tenant ID from the JSON</li>
 <li><code>AZURE_SUBSCRIPTION_ID</code>: The subscription ID from the JSON</li>
 </ol>
-<h2 id="github-action-workflow-template">GitHub Action Workflow Template</h2>
+<h3 id="using-user-assigned-identity">Using user-assigned identity</h3>
+<ol>
+<li>Create a user-assigned identity in Azure:
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>identity<span class="w"> </span>create<span class="w"> </span>--name<span class="w"> </span>&lt;identity-name&gt;<span class="w"> </span>--resource-group<span class="w"> </span>&lt;resource-group-name&gt;
+</code></pre></div></li>
+</ol>
+<p>The output of this command will look similar to this:
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;clientId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;clientResourceGroup&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;myResourceGroup&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;/subscriptions/&lt;subscription-id&gt;/resourcegroups/myResourceGroup/providers/Microsoft.ManagedIdentity/userAssignedIdentities/myIdentity&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;location&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;eastus&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;myIdentity&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;principalId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;resourceGroup&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;myResourceGroup&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;tags&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{},</span>
+<span class="w">  </span><span class="nt">&quot;tenantId&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Microsoft.ManagedIdentity/userAssignedIdentities&quot;</span>
+<span class="p">}</span>
+</code></pre></div></p>
+<p>You should save this for later steps.</p>
+<ol>
+<li>
+<p>Assign reader role with appropiate scope:
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>role<span class="w"> </span>assignment<span class="w"> </span>create<span class="w"> </span>--assignee<span class="w"> </span>&lt;principal-id&gt;<span class="w"> </span>--role<span class="w"> </span><span class="s2">&quot;Reader&quot;</span><span class="w"> </span>--scope<span class="w"> </span>&lt;scope&gt;
+</code></pre></div>
+The scope of the role assignement will define if ARI will be able to find resources. It is adviseable to use the subscription/management group that contains everything you want to document.</p>
+</li>
+<li>
+<p>Create Federated Credentials<br />
+To log in with the created user-assigned identity, we need to create a federated credential, to be able to use OIDC to connect.
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>identity<span class="w"> </span>federated-credential<span class="w"> </span>create
+<span class="w">  </span>--identity-name<span class="w"> </span><span class="s2">&quot;myManagedIdentity&quot;</span>
+<span class="w">  </span>--resource-group<span class="w"> </span><span class="s2">&quot;myResourceGroup&quot;</span>
+<span class="w">  </span>--issuer<span class="w"> </span><span class="s2">&quot;https://token.actions.githubusercontent.com&quot;</span><span class="w"> </span>
+<span class="w">  </span>--subject<span class="w"> </span><span class="s2">&quot;repo:myorg/myrepo:ref:refs/heads/main&quot;</span>
+<span class="w">  </span>--name<span class="w"> </span><span class="s2">&quot;github-federation&quot;</span>
+<span class="w">  </span><span class="c1"># Issuer will differ if you use GitHub Enterprise server.</span>
+</code></pre></div>
+You can also follow the the Microsoft Learn documentation: <a href="https://learn.microsoft.com/en-gb/entra/workload-id/workload-identity-federation-create-trust-user-assigned-managed-identity?pivots=identity-wif-mi-methods-azp#github-actions-deploying-azure-resources">MS Learn/Configure a federated identity credential on a user-assigned managed identity</a></p>
+</li>
+<li>
+<p>(Optional) Retrieve identity parameters<br />
+If you forgot to save the output of the user-assigned identity, you can retrieve the necessary fields using the following commands:</p>
+</li>
+</ol>
+<div class="highlight"><pre><span></span><code>az<span class="w"> </span>identity<span class="w"> </span>show<span class="w"> </span>--name<span class="w"> </span>&lt;identity-name&gt;<span class="w"> </span>--resource-group<span class="w"> </span>&lt;resource-group&gt;
+</code></pre></div>
+<ol>
+<li>
+<p>Set GitHub Secrets<br />
+  You can either set GitHub secrets using the online interface, or using GitHub CLI.</p>
+</li>
+<li>
+<p>If you want to set it using the online   graphical interface:</p>
+<ul>
+<li>In your GitHub repository, go to Settings → Secrets and variables → Actions</li>
+</ul>
+</li>
+<li>
+<p>If you want to set it using GitHub CLI:</p>
+<ul>
+<li>Make sure that you have GitHub CLI installed</li>
+<li>Create repository secrets using the following template:  </li>
+</ul>
+<p>gh secret set <secret-name> -b <secret-value> -R <owner>/<repo-name></p>
+</li>
+<li>
+<p>Set the required secrets:</p>
+<ul>
+<li><code>AZURE_CLIENT_ID</code>: The client ID from the JSON</li>
+<li><code>AZURE_TENANT_ID</code>: The tenant ID from the JSON</li>
+<li><code>AZURE_SUBSCRIPTION_ID</code>: The subscription ID from the JSON</li>
+</ul>
+</li>
+</ol>
+<h2 id="github-action-workflow-template-for-service-principal">GitHub Action Workflow Template For Service Principal</h2>
 <p>Create a file named <code>.github/workflows/azure-inventory.yml</code> in your repository with the following content:</p>
 <div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Azure Resource Inventory</span>
 
@@ -1547,9 +1677,10 @@
 <span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v3</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Login to Azure</span>
-<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azure/login@v1</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azure/login@v2</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
-<span class="w">          </span><span class="nt">creds</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.AZURE_CREDENTIALS }}</span>
+<span class="w">          </span><span class="nt">creds</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;{&quot;clientId&quot;:&quot;${{</span><span class="nv"> </span><span class="s">secrets.AZURE_CLIENT_ID</span><span class="nv"> </span><span class="s">}}&quot;,&quot;clientSecret&quot;:&quot;${{</span><span class="nv"> </span><span class="s">secrets.AZURE_CLIENT_SECRET</span><span class="nv"> </span><span class="s">}}&quot;,&quot;subscriptionId&quot;:&quot;${{</span><span class="nv"> </span><span class="s">secrets.AZURE_SUBSCRIPTION_ID</span><span class="nv"> </span><span class="s">}}&quot;,&quot;tenantId&quot;:&quot;${{</span><span class="nv"> </span><span class="s">secrets.AZURE_TENANT_ID</span><span class="nv"> </span><span class="s">}}&quot;}&#39;</span>
+<span class="w">          </span><span class="nt">enable-AzPSSession</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install ARI and dependencies</span>
 <span class="w">        </span><span class="nt">shell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pwsh</span>
@@ -1591,14 +1722,134 @@
 <span class="w">          </span><span class="no">New-Item -Path &quot;$env:GITHUB_WORKSPACE/ari-reports&quot; -ItemType Directory -Force</span>
 
 <span class="w">          </span><span class="no"># Move reports to artifacts directory</span>
-<span class="w">          </span><span class="no">Move-Item -Path &quot;.\*.xlsx&quot; -Destination &quot;$env:GITHUB_WORKSPACE/ari-reports/&quot; -Force</span>
+<span class="w">          </span><span class="no">Move-Item -Path &quot;$HOME/AzureResourceInventory/*.xlsx&quot; -Destination &quot;$env:GITHUB_WORKSPACE/ari-reports/&quot; -Force</span>
 
-<span class="w">          </span><span class="no">if (Test-Path &quot;.\*.drawio&quot;) {</span>
-<span class="w">            </span><span class="no">Move-Item -Path &quot;.\*.drawio&quot; -Destination &quot;$env:GITHUB_WORKSPACE/ari-reports/&quot; -Force</span>
+<span class="w">          </span><span class="no">if (Test-Path &quot;$HOME/AzureResourceInventory/*.xml&quot;) {</span>
+<span class="w">            </span><span class="no">Move-Item -Path &quot;&quot;$HOME/AzureResourceInventory/*.xml&quot; -Destination &quot;$env:GITHUB_WORKSPACE/ari-reports/&quot; -Force</span>
 <span class="w">          </span><span class="no">}</span>
 
 <span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upload Reports as Artifacts</span>
-<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/upload-artifact@v3</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/upload-artifact@v4</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ARI-Reports</span>
+<span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ari-reports/</span>
+<span class="w">          </span><span class="nt">retention-days</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">90</span>
+
+<span class="w">      </span><span class="c1"># Optional: Upload to Azure Storage</span>
+<span class="w">      </span><span class="c1"># - name: Upload to Azure Storage</span>
+<span class="w">      </span><span class="c1">#   shell: pwsh</span>
+<span class="w">      </span><span class="c1">#   run: |</span>
+<span class="w">      </span><span class="c1">#     $storageAccount = &quot;yourstorageaccount&quot;</span>
+<span class="w">      </span><span class="c1">#     $container = &quot;ari-reports&quot;</span>
+<span class="w">      </span><span class="c1">#</span>
+<span class="w">      </span><span class="c1">#     # Create the storage context</span>
+<span class="w">      </span><span class="c1">#     $ctx = New-AzStorageContext -StorageAccountName $storageAccount -UseConnectedAccount</span>
+<span class="w">      </span><span class="c1">#</span>
+<span class="w">      </span><span class="c1">#     # Upload files to Azure Storage</span>
+<span class="w">      </span><span class="c1">#     Get-ChildItem -Path &quot;$env:GITHUB_WORKSPACE/ari-reports&quot; -File | ForEach-Object {</span>
+<span class="w">      </span><span class="c1">#       Set-AzStorageBlobContent -File $_.FullName -Container $container -Blob $_.Name -Context $ctx -Force</span>
+<span class="w">      </span><span class="c1">#     }</span>
+
+<span class="w">      </span><span class="c1"># Optional: Send email notification</span>
+<span class="w">      </span><span class="c1"># - name: Send Email Notification</span>
+<span class="w">      </span><span class="c1">#   uses: dawidd6/action-send-mail@v3</span>
+<span class="w">      </span><span class="c1">#   with:</span>
+<span class="w">      </span><span class="c1">#     server_address: smtp.gmail.com</span>
+<span class="w">      </span><span class="c1">#     server_port: 465</span>
+<span class="w">      </span><span class="c1">#     username: ${{ secrets.EMAIL_USERNAME }}</span>
+<span class="w">      </span><span class="c1">#     password: ${{ secrets.EMAIL_PASSWORD }}</span>
+<span class="w">      </span><span class="c1">#     subject: Azure Resource Inventory Report</span>
+<span class="w">      </span><span class="c1">#     body: Azure Resource Inventory has completed. Reports are attached.</span>
+<span class="w">      </span><span class="c1">#     to: recipient@example.com</span>
+<span class="w">      </span><span class="c1">#     from: Azure Inventory &lt;sender@example.com&gt;</span>
+</code></pre></div>
+<h2 id="github-action-workflow-template-for-user-assigned-identity">GitHub Action Workflow Template For User-Assigned Identity</h2>
+<p>Create a file named <code>.github/workflows/azure-inventory.yml</code> in your repository with the following content:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Azure Resource Inventory</span>
+
+<span class="nt">on</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">schedule</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Run weekly on Monday at 8:00 AM UTC</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">cron</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;0</span><span class="nv"> </span><span class="s">8</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">1&#39;</span>
+<span class="w">  </span><span class="c1"># Allow manual trigger</span>
+<span class="w">  </span><span class="nt">workflow_dispatch</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">inputs</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">subscriptionId</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Specific</span><span class="nv"> </span><span class="s">subscription</span><span class="nv"> </span><span class="s">ID</span><span class="nv"> </span><span class="s">(optional)&#39;</span>
+<span class="w">        </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;00000000-0000-0000-0000-000000000000&#39;</span>
+<span class="w">      </span><span class="nt">resourceGroup</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Specific</span><span class="nv"> </span><span class="s">resource</span><span class="nv"> </span><span class="s">group</span><span class="nv"> </span><span class="s">(optional)&#39;</span>
+<span class="w">        </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;test-rg&#39;</span>
+<span class="w">      </span><span class="nt">reportName</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;Custom</span><span class="nv"> </span><span class="s">report</span><span class="nv"> </span><span class="s">name</span><span class="nv"> </span><span class="s">(optional)&#39;</span>
+<span class="w">        </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="s">&#39;TestInventory&#39;</span>
+
+<span class="nt">jobs</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">run-inventory</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">runs-on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ubuntu-latest</span>
+<span class="w">    </span><span class="nt">steps</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Checkout repository</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/checkout@v3</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Login to Azure</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">azure/login@v2</span>
+<span class="w">        </span><span class="nt">with</span><span class="p">:</span>
+<span class="w">          </span><span class="nt">client-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.AZURE_CLIENT_ID }}</span>
+<span class="w">          </span><span class="nt">tenant-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.AZURE_TENANT_ID }}</span>
+<span class="w">          </span><span class="nt">subscription-id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">${{ secrets.AZURE_SUBSCRIPTION_ID }}</span>
+<span class="w">          </span><span class="nt">enable-AzPSSession</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Install ARI and dependencies</span>
+<span class="w">        </span><span class="nt">shell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pwsh</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">Install-Module -Name AzureResourceInventory -Force -Scope CurrentUser</span>
+<span class="w">          </span><span class="no">Install-Module -Name Az.Accounts -Force -Scope CurrentUser</span>
+<span class="w">          </span><span class="no">Install-Module -Name ImportExcel -Force -Scope CurrentUser</span>
+<span class="w">          </span><span class="no">Import-Module AzureResourceInventory</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Run ARI</span>
+<span class="w">        </span><span class="nt">shell</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pwsh</span>
+<span class="w">        </span><span class="nt">run</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">          </span><span class="no">$params = @{}</span>
+
+<span class="w">          </span><span class="no"># If subscription ID is provided</span>
+<span class="w">          </span><span class="no">if (&quot;${{ github.event.inputs.subscriptionId }}&quot; -ne &quot;&quot;) {</span>
+<span class="w">            </span><span class="no">$params.Add(&quot;SubscriptionID&quot;, &quot;${{ github.event.inputs.subscriptionId }}&quot;)</span>
+<span class="w">          </span><span class="no">}</span>
+
+<span class="w">          </span><span class="no"># If resource group is provided</span>
+<span class="w">          </span><span class="no">if (&quot;${{ github.event.inputs.resourceGroup }}&quot; -ne &quot;&quot;) {</span>
+<span class="w">            </span><span class="no">$params.Add(&quot;ResourceGroup&quot;, &quot;${{ github.event.inputs.resourceGroup }}&quot;)</span>
+<span class="w">          </span><span class="no">}</span>
+
+<span class="w">          </span><span class="no"># Set report name</span>
+<span class="w">          </span><span class="no">if (&quot;${{ github.event.inputs.reportName }}&quot; -ne &quot;&quot;) {</span>
+<span class="w">            </span><span class="no">$params.Add(&quot;ReportName&quot;, &quot;${{ github.event.inputs.reportName }}&quot;)</span>
+<span class="w">          </span><span class="no">} else {</span>
+<span class="w">            </span><span class="no">$params.Add(&quot;ReportName&quot;, &quot;AzureInventory_$(Get-Date -Format &#39;yyyyMMdd&#39;)&quot;)</span>
+<span class="w">          </span><span class="no">}</span>
+
+<span class="w">          </span><span class="no"># Add any other parameters you want to use here</span>
+<span class="w">          </span><span class="no"># For example: $params.Add(&quot;SecurityCenter&quot;, $true)</span>
+
+<span class="w">          </span><span class="no"># Run ARI</span>
+<span class="w">          </span><span class="no">Invoke-ARI @params</span>
+
+<span class="w">          </span><span class="no"># Create artifacts directory</span>
+<span class="w">          </span><span class="no">New-Item -Path &quot;$env:GITHUB_WORKSPACE/ari-reports&quot; -ItemType Directory -Force</span>
+
+<span class="w">          </span><span class="no"># Move reports to artifacts directory</span>
+<span class="w">          </span><span class="no">Move-Item -Path &quot;$HOME/AzureResourceInventory/*.xlsx&quot; -Destination &quot;$env:GITHUB_WORKSPACE/ari-reports/&quot; -Force</span>
+
+<span class="w">          </span><span class="no">if (Test-Path &quot;$HOME/AzureResourceInventory/*.xml&quot;) {</span>
+<span class="w">            </span><span class="no">Move-Item -Path &quot;&quot;$HOME/AzureResourceInventory/*.xml&quot; -Destination &quot;$env:GITHUB_WORKSPACE/ari-reports/&quot; -Force</span>
+<span class="w">          </span><span class="no">}</span>
+
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Upload Reports as Artifacts</span>
+<span class="w">        </span><span class="nt">uses</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">actions/upload-artifact@v4</span>
 <span class="w">        </span><span class="nt">with</span><span class="p">:</span>
 <span class="w">          </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ARI-Reports</span>
 <span class="w">          </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ari-reports/</span>
@@ -1690,15 +1941,14 @@
 <h3 id="authentication-issues">Authentication Issues</h3>
 <p>If you encounter authentication errors:</p>
 <ol>
-<li>Check that your service principal has the required permissions</li>
+<li>Check that your service principal/user-assigned identity has the required permissions</li>
 <li>Verify the secrets are correctly set in GitHub</li>
-<li>Try using <code>azure/login@v1</code> with the entire JSON credential</li>
 </ol>
 <h3 id="missing-reports">Missing Reports</h3>
 <p>If reports aren't generated:</p>
 <ol>
 <li>Check the workflow logs for errors</li>
-<li>Ensure the service principal has at least Reader access to the subscriptions</li>
+<li>Ensure the service principal/user-assigned identity has at least Reader access to the subscriptions</li>
 <li>Try running with the <code>-Debug</code> parameter for detailed logging</li>
 </ol>
 <h2 id="comparison-with-azure-automation">Comparison with Azure Automation</h2>
