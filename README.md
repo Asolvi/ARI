@@ -25,7 +25,6 @@ Tags: PowerShell, Azure, Inventory, Excel Report, Customer Engineer
 
 - [Overview](#-overview)
 - [Key Features](#-key-features)
-- [What's New in v3.5](#-whats-new-in-v35)
 - [Getting Started](#-getting-started)
   - [Prerequisites](#prerequisites)
   - [Installation](#installation)
@@ -62,40 +61,8 @@ Azure Resource Inventory (ARI) is a comprehensive PowerShell module that generat
 - **Automation-Ready**: Can be deployed via Azure Automation Accounts
 - **Low-Impact**: Read-only operations with no changes to your environment
 
-## 🚀 What's New in v3.5
 
-### PowerShell Module Installation
-
-Now available as a standard PowerShell module for easier installation and updates:
-
-```powershell
-Install-Module -Name AzureResourceInventory
-```
-
-<p align="center">
-  <img src="images/InstallARI.gif" width="700">
-</p>
-
-### Full Automation Account Integration
-
-The process to run ARI using Automation Accounts is now fully integrated with the new module format:
-
-<p align="center">
-  <img src="images/Automation.png" width="600">
-</p>
-
-See the [Automation Guide](https://github.com/microsoft/ARI/blob/main/Automation/README.md) for implementation details.
-
-### Azure REST API Integration
-
-We've incorporated additional data sources through the Azure REST API, including:
-
-- Azure Support Tickets
-- Azure Health Incidents
-- Azure Advisor Score Data
-- Reservation Recommendations
-
-## 🏁 Getting Started
+## 🚀 Getting Started
 
 ### Prerequisites
 
@@ -111,9 +78,23 @@ Install the module directly from PowerShell Gallery:
 Install-Module -Name AzureResourceInventory
 ```
 
+<p align="center">
+  <img src="images/InstallARI.gif" width="700">
+</p>
+
+
 ### Quick Start
 
 To generate a basic inventory report:
+
+```powershell
+Import-Module AzureResourceInventory
+```
+
+<p align="center">
+  <img src="images/ImportingARI.gif" width="700">
+</p>
+
 
 ```powershell
 Invoke-ARI
@@ -171,6 +152,16 @@ Invoke-ARI -TenantID <Azure-Tenant-ID> -SubscriptionID <Subscription-ID> -SkipAd
 Invoke-ARI -TenantID <Azure-Tenant-ID> -SkipDiagram
 ```
 
+### Automation Account Integration
+
+If you want to automatically run ARI, there is a way to do it using Automation Accounts:
+
+<p align="center">
+  <img src="images/Automation.png" width="600">
+</p>
+
+See the [Automation Guide](https://github.com/microsoft/ARI/blob/main/docs/advanced/automation.md) for implementation details.
+
 ## 📝 Parameters Reference
 
 | Parameter | Description | Usage |
@@ -191,18 +182,21 @@ Invoke-ARI -TenantID <Azure-Tenant-ID> -SkipDiagram
 | **Content Options** | | |
 | SecurityCenter | Include Security Center data | `-SecurityCenter` |
 | IncludeTags | Include resource tags | `-IncludeTags` |
-| QuotaUsage | Include quota usage information | `-QuotaUsage` |
+| SkipPolicy | Skip Azure Policy collection | `-SkipPolicy` |
+| SkipVMDetails | Skip Azure VM Extra Details collection | `-SkipVMDetails` |
 | SkipAdvisory | Skip Azure Advisory collection | `-SkipAdvisory` |
+| IncludeCosts | Includes Azure Cost details for the Subscriptions (Requires the module Az.CostManagement) | `-IncludeCosts` |
+| SkipVMDetails | Skip extra details for the VM Families (Quota, vCPUs and memory) | `-SkipVMDetails` |
 | **Output Options** | | |
 | ReportName | Custom report filename | `-ReportName <NAME>` |
 | ReportDir | Custom directory for report | `-ReportDir "<Path>"` |
 | Lite | Use lightweight Excel generation (no charts) | `-Lite` |
 | **Diagram Options** | | |
-| Diagram | Create Draw.IO diagram | `-Diagram` |
 | SkipDiagram | Skip diagram creation | `-SkipDiagram` |
 | DiagramFullEnvironment | Include all network components in diagram | `-DiagramFullEnvironment` |
 | **Other Options** | | |
 | Debug | Run in debug mode | `-Debug` |
+| NoAutoUpdate | Skip the auto update of the ARI Module | `-NoAutoUpdate` |
 | AzureEnvironment | Specify Azure cloud environment | `-AzureEnvironment <NAME>` |
 | Automation | Run using Automation Account | `-Automation` |
 | StorageAccount | Storage account for automation output | `-StorageAccount <NAME>` |
