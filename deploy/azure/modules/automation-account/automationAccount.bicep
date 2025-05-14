@@ -21,6 +21,22 @@ resource automationAccount 'Microsoft.Automation/automationAccounts@2023-11-01' 
   }
 }
 
+resource runtimeEnvironment 'Microsoft.Automation/automationAccounts/runtimeEnvironments@2023-05-15-preview' = {
+  parent: automationAccount
+  name: 'PowerShell74'
+  location: locations
+  properties: {
+    runtime: {
+      language: 'PowerShell'
+      version: '7.4'
+    }
+    defaultPackages: {
+      az: '12.3.0'
+      'azure cli': '2.64.0'
+    }
+  }
+}
+
 @description('Creates an Automation Account Runbook')
 resource runbook 'Microsoft.Automation/automationAccounts/runbooks@2023-11-01' = {
   name: runbookName
@@ -48,7 +64,7 @@ resource schedule 'Microsoft.Automation/automationAccounts/schedules@2023-11-01'
       ]
     }
     description: 'Schedule for the Runbook - ${runbookName}'
-    startTime: '2025-03-28 20:00'
+    startTime: '2025-05-28 20:00'
     timeZone: 'UTC'
   }
 }

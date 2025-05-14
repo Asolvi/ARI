@@ -47,14 +47,6 @@ module automationAccountModule '../modules/automation-account/automationAccount.
   }
 }
 
-module automationAccountPSModules '../modules/automation-account/automationAccountPSModules.bicep' = {
-  name: 'automationAccountPSModules'
-  scope: resourceGroup(subscriptionID, resourceGroupName)
-  params: {
-    automationAccountName: automationAccountName
-  }
-}
-
 module roleAssignmentReaderModule '../modules/automation-account/roleAssignmentReader.bicep' = {
   name: 'roleAssignmentModule'
   scope: managementGroup(managementGroupID)
